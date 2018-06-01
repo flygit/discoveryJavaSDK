@@ -1,0 +1,21 @@
+group 'com.bilibili.discovery'
+version '1.0.0.RELEASE'
+
+apply plugin: 'java'
+apply plugin: 'maven'
+
+
+sourceCompatibility = 1.8
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+dependencies {
+    testCompile 'junit:junit:4.12'
+    compile 'com.squareup.okhttp3:okhttp:3.10.0'
+    compile 'com.google.code.gson:gson:2.8.2'
+    compile 'org.slf4j:slf4j-api:1.7.25'
+}

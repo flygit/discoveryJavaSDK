@@ -1,0 +1,3 @@
+discovery:
+  api:
+    url : "http://api.discovery.co/nodes"
