@@ -1,46 +1,34 @@
 package com.bilibili.discovery;
 
-import com.bilibili.discovery.bean.Instance;
+import com.bilibili.discovery.client.RequestClient;
+import com.bilibili.discovery.config.DiscoveryConfig;
+import com.bilibili.discovery.model.InstanceInfo;
+import com.bilibili.discovery.model.ServiceInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 public class Discovery {
+    private static final Logger LOGGER = LoggerFactory.getLogger("discovery");
+    private RequestClient requestClient;
 
-    private DiscoveryClient client;
-    private Dispatcher dispatcher = new Dispatcher();
-
-    public Discovery(String apps) {
-        client = new DiscoveryClient(Arrays.asList(apps.split(",")), dispatcher);
+    public Discovery(DiscoveryConfig config) {
+        requestClient = new RequestClient(config.getApps(), config.getNodeUrl());
+        requestClient.start();
     }
 
-    public Discovery(Set<String> apps) {
-        client = new DiscoveryClient(new ArrayList<>(apps), dispatcher);
+    public Map<String, ServiceInfo> getServiceInfo() {
+        return Collections.unmodifiableMap(requestClient.getServiceInfo());
     }
 
-    public void start() {
-        client.start();
-    }
-
-    public void stop() {
-        client.stop();
-    }
-
-    public void addListener(DiscoveryListener l) {
-        dispatcher.addListener(l);
-    }
-
-    public void removeListener(DiscoveryListener l) {
-        dispatcher.removeListener(l);
-    }
-
-    public List<Instance> getInstance(String app, String zone) {
+    public List<InstanceInfo> getInstanceInfo(String app, String zone) {
         try {
-            return Collections.unmodifiableList(client.getInstances().get(app).getZoneInstances().get(zone));
+            return Collections.unmodifiableList(requestClient.getServiceInfo().get(app).getZoneInstances().get(zone));
         } catch (Exception e) {
+            LOGGER.error("discovery client get instance info error.", e);
             return null;
         }
     }
