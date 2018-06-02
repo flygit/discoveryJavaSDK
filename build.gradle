@@ -15,6 +15,7 @@ repositories {
 
 dependencies {
     testCompile 'junit:junit:4.12'
+    compileOnly 'org.projectlombok:lombok:1.16.16'
     compile 'com.squareup.okhttp3:okhttp:3.10.0'
     compile 'com.google.code.gson:gson:2.8.2'
     compile 'org.slf4j:slf4j-api:1.7.25'
